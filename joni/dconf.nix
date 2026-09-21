@@ -29,10 +29,12 @@
       };
     */
 
-/*    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "Dock Broken";
-      binding = "<Shift><Super>o";
-      command = ''bash -c "dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys false && dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys true"'';
-    };*/
+    /*
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+         name = "Dock Broken";
+         binding = "<Shift><Super>o";
+         command = ''bash -c "dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys false && dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys true"'';
+       };
+    */
   };
 }

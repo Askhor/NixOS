@@ -40,20 +40,22 @@ in
     imports = [
       ./dconf.nix
     ];
-    
-    /*programs.gpg = {
-    	enable = true;
-    };*/
-    
+
+    /*
+      programs.gpg = {
+      	enable = true;
+      };
+    */
+
     programs.ssh = {
-    	enable = true;
-    	enableDefaultConfig = false;
-    	settings = {
-    		"guenthner.xyz" = {
-    			HostName = "87.106.77.210";
-    			User = "j";
-    		};
-    	};
+      enable = true;
+      enableDefaultConfig = false;
+      settings = {
+        "guenthner.xyz" = {
+          HostName = "87.106.77.210";
+          User = "j";
+        };
+      };
     };
 
     programs.git = {
@@ -64,17 +66,23 @@ in
           email = "j@guenthner.xyz";
         };
         status = {
-        	short = true;
+          short = true;
         };
         alias = {
-        	last = "log -1 HEAD";
-        	s = "status";
+          last = "log -1 HEAD";
+          s = "status";
+        };
+        gpg.ssh = {
+          allowedSignersFile = builtins.toFile "allowed_signers" ''
+            		j@guenthner.xyz namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINc1okn5N3hMJinTPAlbGWeBq7olIEsRDQcSar20r42C
+            	'';
         };
       };
       signing = {
-      	format = "ssh";
-      	#key = "0B3FD075D759F8C736A8DE444AD6BF8E2EF7927B";
-      	signByDefault = true;
+        format = "ssh";
+        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINc1okn5N3hMJinTPAlbGWeBq7olIEsRDQcSar20r42C j-guenthner@guenthner";
+        # allowedSigners = ''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINc1okn5N3hMJinTPAlbGWeBq7olIEsRDQcSar20r42C j-guenthner@guenthner'';
+        signByDefault = true;
       };
     };
 
