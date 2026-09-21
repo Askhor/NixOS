@@ -9,7 +9,7 @@
     ./hardware-configuration.nix
     ./time_locale.nix
     ./networking.nix
-    ./joni.nix
+    ./joni/joni.nix
     ./system.nix
     ./sound.nix
   ];
