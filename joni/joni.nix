@@ -29,6 +29,9 @@ in
       fastfetch
       ansifilter
       bat
+      tor-browser
+      qbittorrent
+      clamav
     ];
   };
 
@@ -156,7 +159,7 @@ in
         {
           enable = true;
           desktop = "${home}/desktop";
-          download = "${home}/download";
+          download = "${home}/downloads";
           videos = "${home}/media";
           pictures = home;
           templates = home;

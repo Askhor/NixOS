@@ -27,6 +27,8 @@
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
     gnomeExtensions.user-themes
+    gnomeExtensions.gtk4-desktop-icons-ng-ding
+    mullvad
   ];
 
   # To disable installing GNOME's suite of applications
