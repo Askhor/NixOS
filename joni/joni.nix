@@ -5,7 +5,10 @@
   ...
 }:
 let
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz";
+  home-manager = builtins.fetchTarball {
+    url = "https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz";
+    sha256 = "1vy9bsc0wgz9ccgghpv4vn0z077j486il9jhrld78llf9720xsbz";
+  };
 in
 {
   imports = [
@@ -141,6 +144,8 @@ in
         bind '"\C-u":"cd ..\C-M"'
         # bind '\C-t':undo
         bind -x '"\C-e":bash -c "nautilus . &> /dev/null"'
+
+        set +o histexpand # Disable history expansion!
       '';
       logoutExtra = "echo Goodbye!";
       sessionVariables = {
@@ -168,6 +173,13 @@ in
           music = "${home}/files/music";
           createDirectories = false;
         };
+      autostart = {
+        enable = true;
+        readOnly = true;
+        entries = with pkgs; [
+          "${signal-desktop}/share/applications/signal.desktop"
+        ];
+      };
     };
   };
 }
