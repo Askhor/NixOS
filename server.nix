@@ -14,6 +14,7 @@
   nixpkgs.config.allowUnfree = true;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  nix.settings.trusted-users = [ "joni" ];
   nix.gc = {
     automatic = true;
     dates = "daily";
@@ -22,6 +23,14 @@
   networking = {
     networkmanager.enable = true;
     hostName = "nixos-server";
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [
+        80
+        443
+        22
+      ];
+    };
   };
   services.openssh = {
     enable = true;
@@ -84,13 +93,28 @@
       bash.enable = true;
     };
   };
-  boot.initrd.availableKernelModules = [
-    "virtio_pci"
-    "virtio_blk"
-    "virtio_scsi"
-    "ahci"
-    "sd_mod"
-  ];
   system.stateVersion = "26.05";
 
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "j.guenthner@proton.me";
+  };
+  services.nginx = {
+    enable = true;
+    virtualHosts."test.guenthner.xyz" = {
+      forceSSL = true;
+      enableACME = true;
+      listenAddresses = [
+        "test.guenthner.xyz"
+        # "217.154.245.104"
+      ];
+      locations."/" = {
+        # root = "/var/www";
+        return = "200 '<html><body>It works</body></html>'";
+        extraConfig = ''
+            	default_type text/html;
+          	'';
+      };
+    };
+  };
 }
