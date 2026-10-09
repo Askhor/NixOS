@@ -55,4 +55,6 @@
 
   # Configure console keymap
   console.keyMap = "de";
+
+# users.mutableUsers = false; DO NOT DO THIS!!!
 }

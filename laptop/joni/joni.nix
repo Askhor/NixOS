@@ -15,8 +15,27 @@ in
     (import "${home-manager}/nixos")
   ];
 
+  /*systemd.services.daily-backup = if builtins.pathExists /home/joni/.config/borg_passphrase then {
+    description = "Daily Backup";
+
+    script = ''
+      		set -eu
+      		echo hiiii
+      		cat /home/joni/.config/borg_passphrase
+      	'';
+
+    serviceConfig = {
+      Type = "oneshot";
+      User = "joni";
+    };
+
+    path = [ pkgs.borgbackup ];
+  } else abort "fuck";*/
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."joni" = {
+	enable = true;
+	hashedPassword = "$6$wIz/v3Mt39c.35An$hOl44DmZL8P.ymDMM9MnIEAHIuAMyq3DJZ4gkDhOAWXEZdCtnGRRkcBMQdVbwxKS2Hy87LLSbpMBsXFamOTDj/";
     isNormalUser = true;
     description = "Joni";
     extraGroups = [
@@ -24,7 +43,7 @@ in
       "wheel"
     ];
     packages = with pkgs; [
-      borgbackup
+      # borgbackup
       keepassxc
       nixfmt
       signal-desktop
@@ -35,6 +54,7 @@ in
       tor-browser
       qbittorrent
       clamav
+      sqlitebrowser
     ];
   };
 
@@ -61,6 +81,10 @@ in
           HostName = "87.106.77.210";
           User = "j";
         };
+	"test" = {
+		HostName = "217.154.245.104";
+		User = "root";
+	};
       };
     };
 
