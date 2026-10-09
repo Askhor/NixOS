@@ -23,7 +23,7 @@ in
         };
         "test" = {
           HostName = "217.154.245.104";
-          User = "root";
+          User = "joni";
         };
       };
     };

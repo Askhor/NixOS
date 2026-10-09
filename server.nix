@@ -6,6 +6,7 @@
 }:
 {
   imports = [
+    ./server-hardware-configuration.nix
     ./modules/home-manager.nix
     ./modules/time_locale.nix
     ./modules/virtualisation.nix
@@ -22,7 +23,7 @@
     networkmanager.enable = true;
     hostName = "nixos-server";
   };
-  services.openssh = { # ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINc1okn5N3hMJinTPAlbGWeBq7olIEsRDQcSar20r42C j-guenthner@guenthner
+  services.openssh = {
     enable = true;
     openFirewall = true;
     settings = {
@@ -30,8 +31,6 @@
       KbdInteractiveAuthentication = false;
       PermitRootLogin = "no";
       AllowUsers = [ "joni" ];
-      MaxAuthTries = 3;
-      PerSourcePenalties = "crash:3600s authfail:3600s max:86400s";
     };
   };
   environment.systemPackages = with pkgs; [
@@ -61,6 +60,9 @@
       fastfetch
       bat
     ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINc1okn5N3hMJinTPAlbGWeBq7olIEsRDQcSar20r42C joni@nixos"
+    ];
   };
 
   my = {
@@ -82,6 +84,13 @@
       bash.enable = true;
     };
   };
+  boot.initrd.availableKernelModules = [
+    "virtio_pci"
+    "virtio_blk"
+    "virtio_scsi"
+    "ahci"
+    "sd_mod"
+  ];
   system.stateVersion = "26.05";
 
 }
