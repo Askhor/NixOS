@@ -13,8 +13,12 @@ in
     };
     cores = mkOption {
       type = types.int;
-      default = 4;
+      default = 7;
       description = "The number of virtual cores";
+    };
+    graphics = mkOption {
+      type = types.bool;
+      default = true;
     };
   };
   config = mkIf cfg.enable {
@@ -23,6 +27,14 @@ in
       virtualisation = {
         memorySize = cfg.memory;
         cores = cfg.cores;
+        forwardPorts = [
+          {
+            from = "host";
+            host.port = 2222;
+            guest.port = 22;
+          }
+        ];
+        graphics = cfg.graphics;
       };
     };
   };

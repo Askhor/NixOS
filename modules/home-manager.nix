@@ -14,10 +14,10 @@ let
 in
 {
   options.my.home-manager = {
-	enable = mkEnableOption "home-manager";
+    enable = mkEnableOption "home-manager";
   };
-  imports = [ 	(import "${home-manager}/nixos") ];
+  imports = [ (import "${home-manager}/nixos") ];
   config = mkIf cfg.enable {
-  	home-manager.useGlobalPkgs = true;
+    home-manager.useGlobalPkgs = true;
   };
 }

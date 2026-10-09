@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     "/etc/nixos/hardware-configuration.nix"
@@ -8,7 +13,6 @@
     ./modules/virtualisation.nix
   ];
   nixpkgs.config.allowUnfree = true;
-  # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   nix.gc = {
@@ -21,7 +25,6 @@
     hostName = "nixos";
   };
   services.printing.enable = true;
-  programs.firefox.enable = true;
   environment.systemPackages = with pkgs; [
     tree
     file
@@ -54,8 +57,8 @@
   console.keyMap = "de";
 
   users.users."joni" = {
-	enable = true;
-	hashedPassword = "$6$wIz/v3Mt39c.35An$hOl44DmZL8P.ymDMM9MnIEAHIuAMyq3DJZ4gkDhOAWXEZdCtnGRRkcBMQdVbwxKS2Hy87LLSbpMBsXFamOTDj/";
+    enable = true;
+    hashedPassword = "$6$wIz/v3Mt39c.35An$hOl44DmZL8P.ymDMM9MnIEAHIuAMyq3DJZ4gkDhOAWXEZdCtnGRRkcBMQdVbwxKS2Hy87LLSbpMBsXFamOTDj/";
     isNormalUser = true;
     description = "Joni";
     extraGroups = [
@@ -78,31 +81,26 @@
     ];
   };
   my = {
-  	home-manager.enable = true;
-  	time_locale.enable = true;
-  	virtualisation.enable = true;
-  	sound.enable = true;
+    home-manager.enable = true;
+    time_locale.enable = true;
+    virtualisation.enable = true;
+    sound.enable = true;
   };
   home-manager.users.joni = {
-    	home.stateVersion = "26.05";
-    	imports = [
-    		./modules/bash.nix
-    		./modules/git.nix
-    		./modules/ssh.nix
-    	];
-    	my = {
-    		bash.enable = true;
-    		git.enable = true;
-    		ssh.enable = true;
-    	};
-  };
-  programs.git = {
-      enable = true;
-      config = {
-        init.defaultBranch = "main";
-      };
+    home.stateVersion = "26.05";
+    imports = [
+      ./modules/bash.nix
+      ./modules/git.nix
+      ./modules/ssh.nix
+      ./modules/xdg.nix
+    ];
+    my = {
+      bash.enable = true;
+      git.enable = true;
+      ssh.enable = true;
+      xdg.enable = true;
     };
-      programs.firefox = {
+    programs.firefox = {
       enable = true;
       languagePacks = [
         "en-GB"
@@ -123,33 +121,16 @@
         };
       };
     };
-     xdg = {
-      userDirs =
-        let
-          home = "/home/joni";
-        in
-        {
-          enable = true;
-          desktop = "${home}/desktop";
-          download = "${home}/downloads";
-          videos = "${home}/media";
-          pictures = home;
-          templates = home;
-          documents = home;
-          projects = home;
-          music = "${home}/files/music";
-          createDirectories = false;
-        };
-      autostart = {
-        enable = true;
-        readOnly = true;
-        entries = with pkgs; [
-          "${signal-desktop}/share/applications/signal.desktop"
-        ];
-      };
+  };
+  programs.git = {
+    enable = true;
+    config = {
+      init.defaultBranch = "main";
     };
+  };
 
- dconf.settings = with lib.hm.gvariant; {
+  /*
+    dconf.settings = with lib.hm.gvariant; {
     "org/gnome/desktop/interface" = {
       "color-scheme" = "prefer-dark";
       "enable-hot-corners" = false;
@@ -163,40 +144,43 @@
         ])
       ];
     };
-    /*
-      "org/gnome/desktop/wm/keybindings" = {
-      	show-desktop = ["<Super>d"];
-      };
-      "org/gnome/settings-daemon/plugins/media-keys" = {
-      	home = ["<Super>e"];
-      	screensaver = [];
-      };
-    */
-
-    /*
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-         name = "Dock Broken";
-         binding = "<Shift><Super>o";
-         command = ''bash -c "dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys false && dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys true"'';
-       };
-    */
-  };
-  system.stateVersion = "26.05";
-  
-  /*systemd.services.daily-backup = if builtins.pathExists /home/joni/.config/borg_passphrase then {
-    description = "Daily Backup";
-
-    script = ''
-      		set -eu
-      		echo hiiii
-      		cat /home/joni/.config/borg_passphrase
-      	'';
-
-    serviceConfig = {
-      Type = "oneshot";
-      User = "joni";
+  */
+  /*
+    "org/gnome/desktop/wm/keybindings" = {
+    	show-desktop = ["<Super>d"];
     };
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+    	home = ["<Super>e"];
+    	screensaver = [];
+    };
+  */
 
-    path = [ pkgs.borgbackup ];
-  } else abort "fuck";*/
+  /*
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+       name = "Dock Broken";
+       binding = "<Shift><Super>o";
+       command = ''bash -c "dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys false && dconf write /org/gnome/shell/extensions/dash-to-dock/hot-keys true"'';
+     };
+  */
+  #};
+  system.stateVersion = "26.05";
+
+  /*
+    systemd.services.daily-backup = if builtins.pathExists /home/joni/.config/borg_passphrase then {
+      description = "Daily Backup";
+
+      script = ''
+        		set -eu
+        		echo hiiii
+        		cat /home/joni/.config/borg_passphrase
+        	'';
+
+      serviceConfig = {
+        Type = "oneshot";
+        User = "joni";
+      };
+
+      path = [ pkgs.borgbackup ];
+    } else abort "fuck";
+  */
 }
