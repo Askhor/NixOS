@@ -24,7 +24,22 @@
     networkmanager.enable = true;
     hostName = "nixos";
   };
-  services.printing.enable = true;
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
+  services.printing = {
+    enable = true;
+    drivers = with pkgs; [
+      cups-filters
+      cups-browsed
+    ];
+  };
+  services.ipp-usb.enable = true;
+
+  environment.sessionVariables.DICPATH = "/run/current-system/sw/share/hunspell";
   environment.systemPackages = with pkgs; [
     tree
     file
@@ -36,6 +51,9 @@
     gnomeExtensions.user-themes
     gnomeExtensions.gtk4-desktop-icons-ng-ding
     mullvad
+    hunspellDicts.en-gb-large
+    hunspellDicts.en-us
+    hunspellDicts.de-de
   ];
   services.gnome.core-apps.enable = true;
   services.gnome.core-developer-tools.enable = true;
